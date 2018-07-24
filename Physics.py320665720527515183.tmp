@@ -1,0 +1,61 @@
+class Particle:
+    def __init__(self , x , y , vx , vy):
+        self.pos = PVector(x,y)
+        self.ppos = PVector(x-vx , y-vy)
+        self.acc = PVector(0 , 0)
+        #
+        self.radius = 10
+        return
+    
+    def update(self , delta=1):
+        self.acc *= delta**2
+        pos = ((self.pos * 2) - self.ppos) + self.acc
+        self.ppos = self.pos.copy()
+        self.pos = pos
+        self.acc *= 0
+        #
+        self.edges()
+        return
+    
+    def edges(self):
+        vel = self.ppos - self.pos
+        #
+        if self.pos.x > width - self.radius:
+            
+        return
+    
+    def show(self):
+        stroke(0)
+        strokeWeight(1)
+        fill(255)
+        ellipse(self.pos.x , self.pos.y , self.radius , self.radius)
+        return
+
+class Beam(object):
+    def __init__(self , end1 , end2):
+        self.end1 = end1
+        self.end2 = end2
+        #
+        self.length = end1.pos.dist(end2.pos)
+        self.stiffness = 1.0
+        return
+    
+    def update(self):
+        end1 = self.end1
+        end2 = self.end2
+        overlap = self.length - end1.pos.dist(end2.pos)
+        #
+        diff = end2.pos - end1.pos
+        correct = overlap / self.length
+        diff *= correct * 0.5
+        diff *= self.stiffness
+        #
+        end1.pos -= diff
+        end2.pos += diff
+        return
+    
+    def show(self):
+        strokeWeight(4)
+        stroke(255)
+        line(self.end1.pos.x , self.end1.pos.y , self.end2.pos.x , self.end2.pos.y)
+        return
